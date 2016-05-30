@@ -199,7 +199,7 @@ int main(int argc, char** argv) {
 	MQTTMessageParams Msg = MQTTMessageParamsDefault;
 	Msg.qos = QOS_0;
 	char cPayload[100];
-	sprintf(cPayload, "%s : %d ", "hello from SDK", i);
+	sprintf(cPayload, "%s : \"%d\" , %s", "{ \"sensor_id\"", 0, "\"passing\" : \"0\" }");
 	Msg.pPayload = (void *) cPayload;
 
 	MQTTPublishParams Params = MQTTPublishParamsDefault;
@@ -222,7 +222,8 @@ int main(int argc, char** argv) {
 		}
 		INFO("-->sleep");
 		sleep(1);
-		sprintf(cPayload, "%s : %d ", "hello from SDK", i++);
+		/*sprintf(cPayload, "%s : %d ", "hello from SDK", i++);  // %s is the string, %d is the deciml, values are passed after comma*/
+		sprintf(cPayload, "%s : \"%d\" , %s", "{ \"sensor_id\"", i++, "\"passing\" : \"0\" }");
 		Msg.PayloadLen = strlen(cPayload) + 1;
 		Params.MessageParams = Msg;
 		rc = aws_iot_mqtt_publish(&Params);
