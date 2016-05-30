@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <time.h>
 
 #include <signal.h>
 #include <memory.h>
@@ -86,11 +87,19 @@ uint32_t port = AWS_IOT_MQTT_PORT;
  */
 uint32_t publishCount = 0;
 
+/**
+ * Number of simulated sensors
+ */
+int sensornum;
+
 void parseInputArgsForConnectParams(int argc, char** argv) {
 	int opt;
 
-	while (-1 != (opt = getopt(argc, argv, "h:p:c:x:"))) {
+	while (-1 != (opt = getopt(argc, argv, "i:h:p:c:x:"))) {
 		switch (opt) {
+		case 'i':
+			sensornum = atoi(optarg);
+			break;
 		case 'h':
 			strcpy(HostAddress, optarg);
 			DEBUG("Host %s", optarg);
@@ -185,7 +194,7 @@ int main(int argc, char** argv) {
 
 	MQTTSubscribeParams subParams = MQTTSubscribeParamsDefault;
 	subParams.mHandler = MQTTcallbackHandler;
-	subParams.pTopic = "traffic flow";
+	subParams.pTopic = "tf";
 	subParams.qos = QOS_0;
 
 	if (NONE_ERROR == rc) {
@@ -193,17 +202,17 @@ int main(int argc, char** argv) {
 		rc = aws_iot_mqtt_subscribe(&subParams);
 		if (NONE_ERROR != rc) {
 			ERROR("Error subscribing");
-		}
+		} 
 	}
 
 	MQTTMessageParams Msg = MQTTMessageParamsDefault;
 	Msg.qos = QOS_0;
 	char cPayload[100];
-	sprintf(cPayload, "%s : \"%d\" , %s", "{ \"sensor_id\"", 0, "\"passing\" : \"0\" }");
+	sprintf(cPayload, "{ \"%s\" : \"%d\" , \"%s\" : \"%d\" }", "sensor_id_time", sensornum,"passing", rand()%2);
 	Msg.pPayload = (void *) cPayload;
 
 	MQTTPublishParams Params = MQTTPublishParamsDefault;
-	Params.pTopic = "traffic flow";
+	Params.pTopic = "tf";
 
 	if (publishCount != 0) {
 		infinitePublishFlag = false;
@@ -223,7 +232,7 @@ int main(int argc, char** argv) {
 		INFO("-->sleep");
 		sleep(1);
 		/*sprintf(cPayload, "%s : %d ", "hello from SDK", i++);  // %s is the string, %d is the deciml, values are passed after comma*/
-		sprintf(cPayload, "%s : \"%d\" , %s", "{ \"sensor_id\"", i++, "\"passing\" : \"0\" }");
+		sprintf(cPayload, "{ \"%s\" : \"%d\" , \"%s\" : \"%d\" }", "sensor_id_time", rand()%sensornum,"passing", rand()%2);
 		Msg.PayloadLen = strlen(cPayload) + 1;
 		Params.MessageParams = Msg;
 		rc = aws_iot_mqtt_publish(&Params);
