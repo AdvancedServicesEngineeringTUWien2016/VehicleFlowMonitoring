@@ -1,0 +1,45 @@
+package vfma;
+
+public class RawSensorData {
+
+	public class TimedSensorData{
+		
+		private String timestamp;
+		
+		public String getTimestamp() {
+			return timestamp;
+		}
+
+		public void setTimestamp(String timestamp) {
+			this.timestamp = timestamp;
+		}
+
+		public class SensorData{
+			
+			private String sensorId;
+			
+			private String passing;
+
+			public String getSensorId() {
+				return sensorId;
+			}
+
+			public void setSensorId(String sensorId) {
+				this.sensorId = sensorId;
+			}
+
+			public String getPassing() {
+				return passing;
+			}
+
+			public void setPassing(String passing) {
+				this.passing = passing;
+			}
+			
+			
+			
+			
+		}
+	}
+	
+}
