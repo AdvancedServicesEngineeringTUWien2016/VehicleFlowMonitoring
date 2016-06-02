@@ -1,0 +1,12 @@
+package vfma;
+
+import java.util.ArrayList;
+
+public class ZoneLogic {
+	
+	
+	public ArrayList<> calculateChanges(ArrayList<RawSensorData> rsdlist, ArrayList<SensorMap> smlist) {
+		
+	}
+
+}

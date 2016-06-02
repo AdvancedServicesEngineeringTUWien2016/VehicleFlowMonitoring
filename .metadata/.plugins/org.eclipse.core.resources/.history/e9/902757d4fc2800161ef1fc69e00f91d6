@@ -1,0 +1,34 @@
+package vfma;
+
+public class AppRunner {
+
+	private static LoadSensorData lsd;
+	private static LoadCityMapData lcmd;
+	private static ZoneLogic zl;
+	
+	public static void main(String[] args) {
+	
+		
+		
+		lsd = new LoadSensorData();
+		lcmd = new LoadCityMapData();
+		
+		try {
+			
+			ArrayList<ZoneChange> zchange = new ArrayList<ZoneChange>();
+			
+			zchange = zl.calculateChanges(
+				lsd.getSensorData(),
+				lcmd.getCityMap()
+				);
+			
+			zl.applyChanges(zchange);
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+}

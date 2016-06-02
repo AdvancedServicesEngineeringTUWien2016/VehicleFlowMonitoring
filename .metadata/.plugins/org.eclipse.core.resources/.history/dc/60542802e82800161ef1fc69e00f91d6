@@ -1,0 +1,62 @@
+package vfma;
+
+import java.util.Iterator;
+
+import org.json.JSONObject;
+
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.ItemCollection;
+import com.amazonaws.services.dynamodbv2.document.ScanOutcome;
+import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.spec.ScanSpec;
+
+public class LoadCityMapData {
+
+	
+	public void getCityMap() {
+		
+		try {
+		
+        AmazonDynamoDBClient client = new AmazonDynamoDBClient()
+                .withEndpoint("https://dynamodb.us-west-2.amazonaws.com");
+
+            DynamoDB dynamoDB = new DynamoDB(client);
+
+            Table table = dynamoDB.getTable("CityMap");
+
+            ScanSpec scanSpec = new ScanSpec();
+            
+            try {
+            	
+            	System.out.println("Get Map...");
+            	
+                ItemCollection<ScanOutcome> items = table.scan(scanSpec);
+
+                Iterator<Item> iter = items.iterator();
+                while (iter.hasNext()) {
+                    Item item = iter.next();
+
+                    final JSONObject rawData = new JSONObject(item.getJSON("CityMap"));
+                    
+                    System.out.println(rawData.getString("sensor_id"));
+                    System.out.println(rawData.getString("zone_id"));
+                    
+                    System.out.println("-------");
+                    
+                    
+                    
+                }
+                
+            } catch (Exception e) {
+                System.err.println("Unable to scan the table:");
+                System.err.println(e.getMessage());
+            }
+	} finally {
+   	 System.out.println("-------");
+   }
+
+	}
+	
+}

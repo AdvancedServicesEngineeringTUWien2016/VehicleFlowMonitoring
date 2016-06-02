@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="&#x0A;                final JSONObject rawData = new JSONObject(item));&#x0A;                rsd.setTimestamp(rawData.getString(&quot;pass&quot;));&#x0A;                final JSONObject timedData = new JSONObject(rawData.get(&quot;payload&quot;));&#x0A;                rsd.setSensorId(timedData.getString(&quot;sensor_id_time&quot;));&#x0A;                rsd.setPassing(timedData.getString(&quot;passing&quot;));&#x0A;                " key="selection"/>
+		<list key="findhistory">
+			<item value="&#x0A;                final JSONObject rawData = new JSONObject(item));&#x0A;                rsd.setTimestamp(rawData.getString(&quot;pass&quot;));&#x0A;                final JSONObject timedData = new JSONObject(rawData.get(&quot;payload&quot;));&#x0A;                rsd.setSensorId(timedData.getString(&quot;sensor_id_time&quot;));&#x0A;                rsd.setPassing(timedData.getString(&quot;passing&quot;));&#x0A;                "/>
+		</list>
+	</section>
+</section>
