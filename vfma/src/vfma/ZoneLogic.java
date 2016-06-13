@@ -15,7 +15,11 @@ import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 
 public class ZoneLogic {
 	
-	
+	/*
+	 * gets the actual SensorMap and RawSensorData lists and calculates the 
+	 * aggregated car count changes for each zone. 
+	 * This means simply incrementing / decrementing an integer value regarding to the direction.
+	 */
 	public ArrayList<ZoneChange> calculateChanges(ArrayList<RawSensorData> rsdlist, ArrayList<SensorMap> smlist) {
 		
 		System.out.println("Calculating changes..." + rsdlist.size());
@@ -55,7 +59,60 @@ public class ZoneLogic {
 		
 	}
 	
+	/*
+	 * Human IFC - on error, resets the zone counts to 0
+	 */
+	public void resyncZones(ArrayList<ZoneChange> zc) {
+		System.out.println("Resetting Zone counts...");
+		Table table;
+		DynamoDB dynamoDB = null;
+		try {
+		
+		AmazonDynamoDBClient client = new AmazonDynamoDBClient()
+	            .withEndpoint("https://dynamodb.us-west-2.amazonaws.com");
+	    dynamoDB = new DynamoDB(client);
+	    table = dynamoDB.getTable("zoneData");
+	    
+	    System.out.println("Connected!" + zc.size());
+	    
+	    Iterator<ZoneChange> air = zc.iterator();
+	    while(air.hasNext()) {
+	    	
+	    	
+	    	
+	    	ZoneChange change = air.next();
+	    	
+	    	System.out.println("Prepare " + change.getZoneId());
+	    	
+	    	if(change.getZoneId().equals(null))
+	    		if(air.hasNext())
+	    			change = air.next();
+	    		else
+	    			break;
+	    	
+	    	UpdateItemSpec item = new UpdateItemSpec()
+	    			.withPrimaryKey("zone", change.getZoneId())
+	    			.withUpdateExpression("set carcount :val1")
+	    			.withValueMap(new ValueMap()
+	    					.withNumber(":val1", 0  ));
+	    			
+	    	table.updateItem(item);
+	    	
+	    	System.out.println("...ok!" );
+	    	
+	    }
+	    
+	    
+        } catch (Exception e) {
+            System.err.println("Unable to update the table:");
+            System.err.println(e.getMessage());
+        } 
+	}
 	
+	
+	/*
+	 * Push the changes read from zonechange list upstream
+	 */
 	public void applyChanges(ArrayList<ZoneChange> zc) {
 		
 		System.out.println("Applying changes...");

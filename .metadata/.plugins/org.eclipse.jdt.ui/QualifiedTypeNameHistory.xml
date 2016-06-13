@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="com.amazonaws.services.dynamodbv2.document.spec.ScanSpec"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="java.awt.List"/>
+<fullyQualifiedTypeName name="com.amazonaws.services.dynamodbv2.document.Item"/>
+<fullyQualifiedTypeName name="com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec"/>
+<fullyQualifiedTypeName name="com.amazonaws.services.dynamodbv2.document.utils.NameMap"/>
+<fullyQualifiedTypeName name="com.amazonaws.services.dynamodbv2.document.utils.ValueMap"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper"/>
+<fullyQualifiedTypeName name="com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression"/>
+<fullyQualifiedTypeName name="java.util.Iterator"/>
 </qualifiedTypeNameHistroy>

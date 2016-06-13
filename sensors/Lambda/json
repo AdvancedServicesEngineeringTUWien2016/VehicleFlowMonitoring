@@ -1,0 +1,5 @@
+{
+  "tableName": "zoneData",
+  "operation": "list",
+  "payload": {"TableName" : "zoneData"}
+}
