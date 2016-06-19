@@ -1,0 +1,63 @@
+package vfma;
+
+import java.util.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.activation.*;
+
+public class Mailer {
+	
+	 String host, port, emailid,username, password;
+	    Properties props = System.getProperties();
+	    Session l_session = null;
+
+	    public Mailer() {
+	        host = "smtp.mail.yahoo.com";
+	        port = "587";
+	        emailid = "asztrikb@yahoo.com";
+	        username = "asztrikb";
+	        password = "XXXXXXXX";
+
+	        emailSettings();
+	        createSession();
+	        sendMessage("Test","test Mail");
+	    }
+
+	    public void emailSettings() {
+	        props.put("mail.smtp.host", host);
+	        props.put("mail.smtp.auth", "true");
+	        props.put("mail.debug", "false");
+	        props.put("mail.smtp.port", port);
+	    }
+
+	    public void createSession() {
+
+	        l_session = Session.getInstance(props,
+	                new javax.mail.Authenticator() {
+	                    protected PasswordAuthentication getPasswordAuthentication() {
+	                        return new PasswordAuthentication(username, password);
+	                    }
+	                });
+
+	    }
+
+	    public boolean sendMessage(String subject, String msg) {
+	        try {
+	            MimeMessage message = new MimeMessage(l_session);
+
+	            message.setFrom(new InternetAddress(this.emailid));
+
+	            message.addRecipient(Message.RecipientType.TO, new InternetAddress("asztrikb@yahoo.com"));
+	            message.setSubject("VFM - [" + subject + "]");
+	            message.setContent(msg, "text/html");
+
+	            Transport.send(message);
+	            System.out.println("Message Sent");
+	        } catch (MessagingException mex) {
+	            mex.printStackTrace();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }//end catch block
+	        return true;
+	    }
+}
