@@ -17,12 +17,12 @@ public class AppRunner {
 		lcmd = new LoadCityMapData();
 		zl = new ZoneLogic();
 		
+		ArrayList<ZoneChange> zchange = null;
+		ArrayList<RawSensorData> rsd = null;
+		ArrayList<SensorMap> sm;
+		
 		try {
 			
-		
-			ArrayList<ZoneChange> zchange;
-			ArrayList<RawSensorData> rsd = null;
-			ArrayList<SensorMap> sm;
 			
 			String lastTimestamp = "0";
 			
@@ -51,7 +51,13 @@ public class AppRunner {
 			}
 			
 			}
-				
+
+		} catch (VFMException e) {
+			Mailer mailer = new Mailer();
+			mailer.sendMessage(e.getMessage(), "Pleace contact XY for further actions! Best Regards, VFM");
+			System.out.println("Resync attempt....");
+			zl.resyncZones(zchange);
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

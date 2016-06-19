@@ -20,7 +20,7 @@ import org.json.*;
 
 public class LoadSensorData {
 
-	public ArrayList<RawSensorData> getSensorData(String lastTimestamp) {
+	public ArrayList<RawSensorData> getSensorData(String lastTimestamp) throws VFMException {
 		
 		ArrayList<RawSensorData> rsdlist = new ArrayList<RawSensorData>();	
 		

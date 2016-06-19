@@ -17,7 +17,7 @@ import com.amazonaws.services.dynamodbv2.document.spec.ScanSpec;
 public class LoadCityMapData {
 
 	
-	public ArrayList<SensorMap> getCityMap() {
+	public ArrayList<SensorMap> getCityMap() throws VFMException {
 		
         ArrayList<SensorMap> sensors = new ArrayList<SensorMap>();
 		

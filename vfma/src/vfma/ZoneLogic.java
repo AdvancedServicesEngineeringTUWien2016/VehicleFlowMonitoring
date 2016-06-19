@@ -8,7 +8,10 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.ItemCollection;
+import com.amazonaws.services.dynamodbv2.document.ScanOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.spec.ScanSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.NameMap;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
@@ -20,7 +23,7 @@ public class ZoneLogic {
 	 * aggregated car count changes for each zone. 
 	 * This means simply incrementing / decrementing an integer value regarding to the direction.
 	 */
-	public ArrayList<ZoneChange> calculateChanges(ArrayList<RawSensorData> rsdlist, ArrayList<SensorMap> smlist) {
+	public ArrayList<ZoneChange> calculateChanges(ArrayList<RawSensorData> rsdlist, ArrayList<SensorMap> smlist) throws VFMException {
 		
 		System.out.println("Calculating changes..." + rsdlist.size());
 		
@@ -113,7 +116,7 @@ public class ZoneLogic {
 	/*
 	 * Push the changes read from zonechange list upstream
 	 */
-	public void applyChanges(ArrayList<ZoneChange> zc) {
+	public void applyChanges(ArrayList<ZoneChange> zc) throws VFMException {
 		
 		System.out.println("Applying changes...");
 		Table table;
@@ -123,9 +126,30 @@ public class ZoneLogic {
 		AmazonDynamoDBClient client = new AmazonDynamoDBClient()
 	            .withEndpoint("https://dynamodb.us-west-2.amazonaws.com");
 	    dynamoDB = new DynamoDB(client);
+	    
+
+	    System.out.println("Connected!" + zc.size());
+	       
+	    
 	    table = dynamoDB.getTable("zoneData");
 	    
-	    System.out.println("Connected!" + zc.size());
+	 
+	    ScanSpec scanSpec = new ScanSpec();
+    	
+       	System.out.println("Get zones for check...");
+        ItemCollection<ScanOutcome> chkitems = table.scan(scanSpec);
+        Iterator<Item> chkiter = chkitems.iterator();
+        while (chkiter.hasNext()) {
+        	Item cntitem = chkiter.next();
+        	Integer zcount = Integer.parseInt(cntitem.getJSON("carcount"));
+        	if (zcount < 0) {
+        		System.out.println("NEGATIVE!!!");
+        		Mailer mailer = new Mailer();
+    			mailer.sendMessage("Negative ZoneCount", "Pleace contact XY for further actions! Best Regards, VFM");
+    			System.out.println("Mail sent....");
+        	}
+        }
+	    
 	    
 	    Iterator<ZoneChange> air = zc.iterator();
 	    while(air.hasNext()) {
